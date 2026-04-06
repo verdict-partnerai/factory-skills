@@ -104,7 +104,7 @@ When triggered to evaluate an Issue:
    gh issue edit {number} -R 0xsmcai/factory-ops --add-label "in-review" --remove-label "evaluate"
    ```
 
-4. Read the Issue content carefully. Scout has posted the raw idea with problem, signal, source, and market context.
+4. Read the Issue content carefully. Scout posts the raw signal -- a tweet, engagement data, gut take. This is intentionally lightweight. Detailed research comes after the research brief (Phase 1.5).
 
 5. **Determine mode.** If the Issue content makes the mode clear, proceed. If not, ask as your first comment:
 
@@ -131,6 +131,40 @@ When triggered to evaluate an Issue:
    - Has paying customers
 
 **STOP.** Wait for Scout's response before proceeding.
+
+---
+
+## Phase 1.5: Research Brief
+
+After determining mode and product stage, post a **research brief** -- a tailored list of things Scout must research before the evaluation begins. Scout's initial post is a raw signal (tweet, engagement, gut take). That's fine. But the forcing questions only work when Scout has substance to draw from.
+
+**Post a comment structured like this:**
+
+```
+[VERDICT] Before I start the evaluation, I need you to research the following. Come back with findings and sources.
+
+1. [specific research task tailored to the idea]
+2. [specific research task]
+3. [specific research task]
+4. [specific research task]
+5. [specific research task]
+```
+
+**What to include in the brief (pick what's relevant):**
+
+- **Existing solutions:** What products, protocols, or tools already do something similar? Names, links, how they work.
+- **Market data:** Trading volume, holder count, TVL, user counts -- whatever quantifies the space. Real numbers from real sources.
+- **Ecosystem context:** What infrastructure already exists that this idea builds on or competes with? Integrations, partnerships, SDKs.
+- **User behavior:** What are target users actually doing today? Where do they hang out? What tools do they use?
+- **The original signal:** Full thread, replies, engagement breakdown -- not just a summary. Who replied? What did they say specifically?
+- **Failed attempts:** Has anyone tried this before? What happened?
+
+**Rules:**
+- Keep it to 4-6 research tasks. Don't send Scout on a week-long expedition.
+- Be specific. "Research the market" is useless. "Find the top 3 prediction markets on Base, their volume, and whether any support memecoins" is useful.
+- Tailor every brief to the idea. No generic templates.
+
+**STOP.** Wait for Scout to post research findings before proceeding to forcing questions.
 
 ---
 
