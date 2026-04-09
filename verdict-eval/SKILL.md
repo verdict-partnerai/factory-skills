@@ -38,11 +38,7 @@ gh issue comment {number} -R smcfactory/factory-ops --body "[VERDICT] your messa
 gh issue view {number} -R smcfactory/factory-ops --comments
 ```
 
-**Managing labels:**
-```bash
-gh issue edit {number} -R smcfactory/factory-ops --add-label "label-name"
-gh issue edit {number} -R smcfactory/factory-ops --remove-label "label-name"
-```
+**You have NO label management commands.** Your GitHub access is read + comment only. Any `gh issue edit --add-label` or `--remove-label` call will return 403. Scout owns all label state changes.
 
 Rules:
 - ALL comments MUST be prefixed with `[VERDICT]`
@@ -54,20 +50,24 @@ Rules:
 
 ## Label Lifecycle
 
-Required labels (one-time setup on factory-ops):
-- `new-idea` — Scout created the Issue
-- `evaluate` — Scout requests Verdict's evaluation
-- `in-review` — Verdict is actively evaluating
-- `approved` — Verdict approved the idea
-- `rejected` — Verdict rejected the idea
+The repo has four SMCFactory labels:
+- `evaluate` — Scout requests Verdict's evaluation (your trigger)
+- `approved` — final state after Scout commits the design doc
+- `rejected` — final state after Verdict declines the idea
+- `escalation` — circuit breaker fired or Nick intervened; both agents STOP
 
 Lifecycle:
-1. Scout creates Issue -> adds `new-idea`
-2. Scout triggers evaluation -> adds `evaluate`
-3. Verdict picks up -> adds `in-review`, removes `evaluate`
-4. Verdict finishes -> adds `approved` or `rejected`, removes `in-review`
+1. Scout creates the Issue and adds `evaluate`
+2. Verdict (you) reads the Issue and runs the evaluation through comments only
+3. Verdict posts `[VERDICT] FINAL DECISION: APPROVED` or `REJECTED`
+4. Scout transitions the labels (removes `evaluate`, adds `approved`/`rejected`) — **never you**
+5. Scout closes the Issue (or merges the design doc PR for approved ideas)
 
-**Guard rail:** Do NOT evaluate Issues without the `evaluate` label, even if they look like ideas. This prevents double-processing and acting on random Issues.
+**You cannot apply, remove, or modify any label.** Your GitHub access is read + comment only. Any attempt to label will return 403. Scout owns all state changes.
+
+**Guard rail:** Do NOT evaluate Issues without the `evaluate` label, even if they look like ideas. Re-check the label set before each Phase transition.
+
+**Escalation rule:** If at any point the Issue gains the `escalation` label, STOP immediately. Do not post further comments. Nick is intervening. The circuit-breaker workflow applies this label automatically when 20+ `[VERDICT]`/`[SCOUT]` comments accumulate; Nick can also apply it manually.
 
 ---
 
@@ -97,16 +97,11 @@ When triggered to evaluate an Issue:
    gh issue view {number} -R smcfactory/factory-ops --comments
    ```
 
-2. Verify the `evaluate` label is present. If not, stop.
+2. Verify the `evaluate` label is present and the `escalation` label is NOT present. If `evaluate` is missing or `escalation` is present, stop.
 
-3. Transition labels:
-   ```bash
-   gh issue edit {number} -R smcfactory/factory-ops --add-label "in-review" --remove-label "evaluate"
-   ```
+3. Read the Issue content carefully. Scout posts the raw signal -- a tweet, engagement data, gut take. This is intentionally lightweight. Detailed research comes after the research brief (Phase 1.5).
 
-4. Read the Issue content carefully. Scout posts the raw signal -- a tweet, engagement data, gut take. This is intentionally lightweight. Detailed research comes after the research brief (Phase 1.5).
-
-5. **Determine mode.** If the Issue content makes the mode clear, proceed. If not, ask as your first comment:
+4. **Determine mode.** If the Issue content makes the mode clear, proceed. If not, ask as your first comment:
 
    ```
    [VERDICT] Before I evaluate this -- what's the goal here?
@@ -125,7 +120,7 @@ When triggered to evaluate an Issue:
    - Startup, intrapreneurship -> **Startup mode** (Phase 2A)
    - Hackathon, open source, research, learning, having fun -> **Builder mode** (Phase 2B)
 
-6. **Assess product stage** (Startup mode only):
+5. **Assess product stage** (Startup mode only):
    - Pre-product (idea stage, no users yet)
    - Has users (people using it, not yet paying)
    - Has paying customers
@@ -780,34 +775,28 @@ Post the final verdict as a structured GitHub comment:
 **Reasoning:** [why this idea passes or fails]
 ```
 
-Then update labels:
-```bash
-# If approved:
-gh issue edit {number} -R smcfactory/factory-ops --add-label "approved" --remove-label "in-review"
-
-# If rejected:
-gh issue edit {number} -R smcfactory/factory-ops --add-label "rejected" --remove-label "in-review"
-```
+After posting the verdict, you are done with Phase 6. **Do NOT attempt to update labels** — Scout owns all state changes. Scout will read this comment via webhook and apply the `approved` or `rejected` label, then proceed to Phase 7 (for approved) or close the Issue (for rejected).
 
 ---
 
-## Phase 7: Design Doc Commit (Approved Ideas Only)
+## Phase 7: Design Doc Handoff (Approved Ideas Only)
 
-If approved, commit the design doc to the repo:
+If approved, post the full design doc as a single follow-up comment on the Issue, wrapped in fence markers so Scout can extract it cleanly:
 
-```bash
-git checkout -b design-doc/{project-name}
-mkdir -p ideas/{project-name}
-# Write design doc to ideas/{project-name}/design-doc.md
-git add ideas/{project-name}/design-doc.md
-git commit -m "Add design doc for {project-name} -- approved by Verdict"
-git push origin design-doc/{project-name}
+```
+[VERDICT] DESIGN DOC FOLLOWS:
+
+(full design doc content here, verbatim — every section from the Phase 5 template,
+nothing truncated, nothing summarized)
+
+[VERDICT] DESIGN DOC END.
 ```
 
-Then post a link in the Issue:
-```bash
-gh issue comment {number} -R smcfactory/factory-ops --body "[VERDICT] Design doc committed: ideas/{project-name}/design-doc.md on branch design-doc/{project-name}"
-```
+Use `gh issue comment` to post it.
+
+**Do NOT save the doc to disk locally. Do NOT create a branch. Do NOT run `git add`, `git commit`, or `git push`.** You have read + comment access only and any write attempt will return 403.
+
+Scout will extract the doc from your comment, write it to `ideas/{project-name}/design-doc.md` in a local clone of the repo, branch, commit, push, open a PR, self-merge, link the merged commit on the Issue, and close it. Your job ends after the comment is posted.
 
 ---
 
@@ -817,5 +806,7 @@ gh issue comment {number} -R smcfactory/factory-ops --body "[VERDICT] Design doc
 - **Questions ONE AT A TIME.** Never batch multiple questions into one comment.
 - **Never skip forcing questions.** No escape hatch. Every relevant question gets asked and answered.
 - **The Assignment is mandatory.** Every evaluation ends with a concrete action -- something to do next.
-- **Guard the label.** Only evaluate Issues with the `evaluate` label.
+- **Guard the label.** Only evaluate Issues with the `evaluate` label. Re-check before each Phase transition.
+- **Stop on `escalation`.** If the Issue gains the `escalation` label at any point during the evaluation, stop immediately. Do not post further comments. Nick is intervening. Re-read the label set at the start of every phase.
+- **You cannot label, push, commit, or merge.** Your GitHub access is read + comment only. The authority model is "Verdict produces words, Scout produces state changes." Any write attempt will return 403. The fix for a 403 is never to escalate your permissions — it is to re-read this skill and remove the offending action.
 - **If Scout provides a fully formed plan:** Still run Phase 3 (Premise Challenge) and Phase 4 (Alternatives). Even obvious plans benefit from premise checking and forced alternatives.
