@@ -8,7 +8,7 @@ Detailed documentation for every skill in the factory-skills library.
 
 **Agent:** Verdict
 **Version:** 1.0.0
-**Source:** [`verdict-eval/SKILL.md`](../verdict-eval/SKILL.md)
+**Source:** [`SKILL.md`](../SKILL.md)
 
 Idea evaluation skill with two modes. Operates entirely through GitHub Issue comments on `smcfactory/factory-ops`.
 
