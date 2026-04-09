@@ -21,7 +21,7 @@ ln -sf ~/.claude/skills/factory/verdict-eval ~/.claude/skills/verdict-eval
 
 | Skill | Agent | Phase | Description |
 |-------|-------|-------|-------------|
-| [`verdict-eval`](verdict-eval/SKILL.md) | Verdict | Think | Idea evaluation through six forcing questions, premise challenge, alternatives generation, and design doc output. Startup mode (go/no-go) and Builder mode (brainstorm). |
+| [`verdict-eval`](SKILL.md) | Verdict | Think | Idea evaluation through six forcing questions, premise challenge, alternatives generation, and design doc output. Startup mode (go/no-go) and Builder mode (brainstorm). |
 
 ## How It Works
 
@@ -49,14 +49,13 @@ All agents communicate through GitHub Issues on [smcfactory/factory-ops](https:/
 ## Repo Structure
 
 ```
-factory-skills/
+verdict-eval/
 ├── README.md           # This file
 ├── CLAUDE.md           # Instructions for Claude Code when editing this repo
 ├── PRINCIPLES.md       # Shared agent operating principles
-├── docs/
-│   └── skills.md       # Detailed skill documentation
-└── verdict-eval/
-    └── SKILL.md        # Verdict's evaluation skill
+├── SKILL.md            # The verdict-eval skill itself
+└── docs/
+    └── skills.md       # Detailed skill documentation
 ```
 
 ## Philosophy
