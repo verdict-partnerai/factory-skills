@@ -20,7 +20,7 @@ Every proposed approach must reference a proven model or be explicitly flagged a
 
 ## Agents Are Specialized, Not General
 
-Each agent has a defined role. Verdict evaluates. Scout researches. Future agents will build, test, deploy. An agent should do its job well and hand off cleanly to the next agent. Don't let scope creep turn an evaluator into a builder or a researcher into an evaluator.
+Each agent has a defined role. Verdict evaluates. SMCFactory researches. Future agents will build, test, deploy. An agent should do its job well and hand off cleanly to the next agent. Don't let scope creep turn an evaluator into a builder or a researcher into an evaluator.
 
 ## GitHub Issues as the Interface
 

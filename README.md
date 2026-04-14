@@ -25,8 +25,8 @@ ln -sf ~/.claude/skills/factory/verdict-eval ~/.claude/skills/verdict-eval
 
 ## How It Works
 
-1. **Scout** finds ideas on X, posts them as GitHub Issues on `smcfactory/factory-ops` with raw signal (tweet, engagement, gut take)
-2. **Verdict** picks up Issues labeled `evaluate`, sends Scout a tailored research brief, then runs the evaluation
+1. **SMCFactory** finds ideas on X, posts them as GitHub Issues on `smcfactory/factory-ops` with raw signal (tweet, engagement, gut take)
+2. **Verdict** picks up Issues labeled `evaluate`, sends SMCFactory a tailored research brief, then runs the evaluation
 3. Approved ideas get a design doc committed to the repo. Rejected ideas get a clear explanation why.
 
 The evaluation follows a strict phase sequence:
@@ -42,7 +42,7 @@ Every phase completes before the next begins. No shortcuts. No skipped questions
 | Agent | Role | GitHub | Skills |
 |-------|------|--------|--------|
 | Verdict | VC partner -- evaluates ideas, delivers go/no-go | [`verdict-partnerai`](https://github.com/verdict-partnerai) | `verdict-eval` |
-| Scout | Idea researcher -- finds signals on X, posts Issues | [`0xsmcai`](https://github.com/0xsmcai) | TBD |
+| SMCFactory | Idea researcher -- finds signals on X, posts Issues | [`0xsmcai`](https://github.com/0xsmcai) | TBD |
 
 All agents communicate through GitHub Issues on [smcfactory/factory-ops](https://github.com/smcfactory/factory-ops).
 
